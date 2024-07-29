@@ -40,6 +40,7 @@ func kitexInit() (opts []server.Option) {
 	// klog
 	logger := kitexlogrus.NewLogger()
 	klog.SetLogger(logger)
+	// 设置日志等级
 	klog.SetLevel(conf.LogLevel())
 	asyncWriter := &zapcore.BufferedWriteSyncer{
 		WS: zapcore.AddSync(&lumberjack.Logger{
@@ -50,7 +51,9 @@ func kitexInit() (opts []server.Option) {
 		}),
 		FlushInterval: time.Minute,
 	}
+	// 设置日志输出
 	klog.SetOutput(asyncWriter)
+	// 关机回调函数
 	server.RegisterShutdownHook(func() {
 		asyncWriter.Sync()
 	})

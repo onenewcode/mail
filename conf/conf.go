@@ -5,7 +5,6 @@ import (
 	"github.com/kr/pretty"
 	"gopkg.in/validator.v2"
 	"gopkg.in/yaml.v3"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sync"
@@ -63,7 +62,7 @@ func GetConf() *Config {
 func initConf() {
 	prefix := "conf"
 	confFileRelPath := filepath.Join(prefix, filepath.Join(GetEnv(), "conf.yaml"))
-	content, err := ioutil.ReadFile(confFileRelPath)
+	content, err := os.ReadFile(confFileRelPath)
 	if err != nil {
 		panic(err)
 	}
@@ -82,6 +81,7 @@ func initConf() {
 }
 
 func GetEnv() string {
+	// 获取启动时的配置的环境变量
 	e := os.Getenv("GO_ENV")
 	if len(e) == 0 {
 		return "test"
