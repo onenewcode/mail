@@ -10,6 +10,7 @@ import (
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"mail/biz/dal"
+	"mail/biz/model"
 	"mail/conf"
 	"mail/kitex_gen/pbapi/echo"
 	"net"
@@ -26,6 +27,7 @@ func main() {
 	opts := kitexInit()
 	// 数据库初始化
 	dal.Init()
+	model.Init()
 
 	svr := echo.NewServer(new(EchoImpl), opts...)
 
