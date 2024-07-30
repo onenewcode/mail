@@ -4,11 +4,12 @@ import (
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
-	"github.com/hashicorp/consul/api"
+	"github.com/joho/godotenv"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
 	consul "github.com/kitex-contrib/registry-consul"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
+	"mail/biz/dal"
 	"mail/conf"
 	"mail/kitex_gen/pbapi/echo"
 	"net"
@@ -16,11 +17,19 @@ import (
 )
 
 func main() {
+	// 加载env配置文件,默认加载.env
+	err := godotenv.Load(".env.example")
+	if err != nil {
+		panic(err)
+	}
+	// rpc框架服务初始化
 	opts := kitexInit()
+	// 数据库初始化
+	dal.Init()
 
 	svr := echo.NewServer(new(EchoImpl), opts...)
 
-	err := svr.Run()
+	err = svr.Run()
 	if err != nil {
 		klog.Error(err.Error())
 	}
@@ -39,11 +48,7 @@ func kitexInit() (opts []server.Option) {
 		ServiceName: conf.GetConf().Kitex.Service,
 	}))
 
-	r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0], consul.WithCheck(&api.AgentServiceCheck{
-		Interval:                       "7s",
-		Timeout:                        "5s",
-		DeregisterCriticalServiceAfter: "15s",
-	}))
+	r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
 	if err != nil {
 		klog.Fatal(err)
 	}
@@ -64,7 +69,7 @@ func kitexInit() (opts []server.Option) {
 	}
 	klog.SetOutput(asyncWriter)
 	server.RegisterShutdownHook(func() {
-		asyncWriter.Sync()
+		_ = asyncWriter.Sync()
 	})
 	return
 }
