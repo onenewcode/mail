@@ -1,6 +1,13 @@
 package main
 
 import (
+	"mail/biz/dal"
+	"mail/biz/model"
+	"mail/conf"
+	"mail/kitex_gen/pbapi/echo"
+	"net"
+	"time"
+
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
@@ -9,12 +16,6 @@ import (
 	consul "github.com/kitex-contrib/registry-consul"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
-	"mail/biz/dal"
-	"mail/biz/model"
-	"mail/conf"
-	"mail/kitex_gen/pbapi/echo"
-	"net"
-	"time"
 )
 
 func main() {
@@ -28,7 +29,7 @@ func main() {
 	// 数据库初始化
 	dal.Init()
 	model.Init()
-
+	// 启动服务器
 	svr := echo.NewServer(new(EchoImpl), opts...)
 
 	err = svr.Run()
