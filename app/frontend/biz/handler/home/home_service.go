@@ -6,6 +6,7 @@ import (
 	"frontend/biz/service"
 	"frontend/biz/utils"
 	home "frontend/hertz_gen/home"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
@@ -27,5 +28,5 @@ func Home(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	utils.SendSuccessResponse(ctx, c, consts.StatusOK, resp)
+	c.HTML(consts.StatusOK, "home.tmpl", resp)
 }

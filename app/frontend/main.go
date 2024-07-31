@@ -8,12 +8,10 @@ import (
 
 	"frontend/biz/router"
 	"frontend/conf"
-	"github.com/cloudwego/hertz/pkg/app"
+
 	"github.com/cloudwego/hertz/pkg/app/middlewares/server/recovery"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"github.com/cloudwego/hertz/pkg/common/utils"
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/hertz-contrib/cors"
 	"github.com/hertz-contrib/gzip"
 	"github.com/hertz-contrib/logger/accesslog"
@@ -31,10 +29,7 @@ func main() {
 
 	registerMiddleware(h)
 
-	// add a ping route to test
-	h.GET("/ping", func(c context.Context, ctx *app.RequestContext) {
-		ctx.JSON(consts.StatusOK, utils.H{"ping": "pong"})
-	})
+	h.LoadHTMLGlob("template/*")
 
 	router.GeneratedRegister(h)
 

@@ -42,3 +42,10 @@
 [//]: # (    -v consul-data:/consul/data \)
 
 [//]: # (    hashicorp/consul agent -server -ui -node=n1 -bootstrap-expect=1 -client=0.0.0.0`)
+
+# day8
+自动生成服务端代码，结构目录参考
+>https://www.cloudwego.io/zh/docs/cwgo/tutorials/layout/
+
+# day9
+完善ui界面
