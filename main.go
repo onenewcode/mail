@@ -2,9 +2,9 @@ package main
 
 import (
 	"mail/biz/dal"
-	"mail/biz/model"
 	"mail/conf"
 	"mail/kitex_gen/pbapi/echo"
+	"mail/middleware"
 	"net"
 	"time"
 
@@ -24,12 +24,11 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	// rpc框架服务初始化
+
 	opts := kitexInit()
-	// 数据库初始化
+
 	dal.Init()
-	model.Init()
-	// 启动服务器
+
 	svr := echo.NewServer(new(EchoImpl), opts...)
 
 	err = svr.Run()
@@ -44,7 +43,7 @@ func kitexInit() (opts []server.Option) {
 	if err != nil {
 		panic(err)
 	}
-	opts = append(opts, server.WithServiceAddr(addr))
+	opts = append(opts, server.WithServiceAddr(addr), server.WithMiddleware(middleware.Middleware))
 
 	// service info
 	opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{

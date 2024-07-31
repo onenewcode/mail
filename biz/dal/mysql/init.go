@@ -26,5 +26,5 @@ func Init() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("%#v", DB.Debug().Exec("select version()"))
+	fmt.Printf("%#v", DB.Debug().Exec("select version()\n"))
 }

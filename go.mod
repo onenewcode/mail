@@ -3,6 +3,7 @@ module mail
 go 1.22.4
 
 require (
+	github.com/bytedance/gopkg v0.0.0-20240514070511-01b2cbcf35e1
 	github.com/cloudwego/fastpb v0.0.4
 	github.com/cloudwego/kitex v0.10.3
 	github.com/joho/godotenv v1.5.1
@@ -17,9 +18,11 @@ require (
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/gorm v1.25.11
+)
+
+require (
 	github.com/apache/thrift v0.13.0 // indirect
 	github.com/armon/go-metrics v0.0.0-20180917152333-f0300d1749da // indirect
-	github.com/bytedance/gopkg v0.0.0-20240514070511-01b2cbcf35e1 // indirect
 	github.com/bytedance/sonic v1.11.8 // indirect
 	github.com/bytedance/sonic/loader v0.1.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
