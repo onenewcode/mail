@@ -5,3 +5,8 @@ gen-frontend:
 .PHONY: app-frontend
 app-frontend: 
 	@cd app/frontend && go run .
+
+.PHONY: gen-user
+gen-user:
+	@cd app/user && cwgo server --type RPC  --service user --module  user  --pass "-use  ${ROOT_MOD}/rpc_gen/kitex_gen" -I ../../idl  --idl ../../idl/user.proto
+	@cd rpc_gen && cwgo client --type RPC  --service user --module  rpc_gen --I ../idl --idl ../idl/user.proto
