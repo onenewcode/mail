@@ -1,6 +1,6 @@
 .PHONY: gen-frontend
 gen-frontend:
-	@cd app/frontend && cwgo server -I ../../idl --type HTTP --server_name  frontend --module frontend --idl ../../idl/frontend/home.proto
+	@cd app/frontend && cwgo server -I ../../idl --type HTTP --server_name  frontend --module frontend --idl ../../idl/frontend/auth_page.proto
 
 .PHONY: app-frontend
 app-frontend: 
