@@ -6,6 +6,9 @@ gen-frontend:
 app-frontend: 
 	@cd app/frontend && go run .
 
+.PHONY: app-user
+app-user: 
+	@cd app/user && go run .
 .PHONY: gen-user
 gen-user:
 	@cd app/user && cwgo server --type RPC  --server_name user --module  user  --pass "-use  ${ROOT_MOD}/rpc_gen/kitex_gen" -I ../../idl  --idl ../../idl/user.proto

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"user/biz/dal"
+	"user/biz/model"
 	"user/conf"
 	"user/kitex_gen/user/userservice"
 
@@ -25,6 +26,7 @@ func main() {
 	}
 
 	dal.Init()
+	model.Init()
 	opts := kitexInit()
 
 	svr := userservice.NewServer(new(UserServiceImpl), opts...)
