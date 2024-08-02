@@ -6,8 +6,6 @@ gen-frontend:
 gen-user:
 	@cd app/user && cwgo server --type RPC  --server_name user --module  user  --pass "-use   rpc_gen/kitex_gen" -I ../../idl  --idl ../../idl/user.proto
 	@cd rpc_gen && cwgo client --type RPC  --server_name user --module  rpc_gen --I ../idl --idl ../idl/user.proto
-
-
 .PHONY: gen-product
 gen-product: 
 	@cd rpc_gen && cwgo client --type RPC --server_name product --module  rpc_gen  -I ../idl  --idl ../idl/product.proto
@@ -34,6 +32,7 @@ gen-order:
 gen-payment: 
 	@cd rpc_gen && cwgo client --type RPC --server_name payment --module  rpc_gen  -I ../idl  --idl ../idl/payment.proto
 	@cd app/payment && cwgo server --type RPC --server_name payment --module  payment --pass "-use  rpc_gen/kitex_gen"  -I ../../idl  --idl ../../idl/payment.proto
+
 
 .PHONY: app-frontend
 app-frontend: 

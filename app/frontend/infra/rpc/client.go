@@ -1,5 +1,3 @@
-
-
 package rpc
 
 import (
@@ -15,12 +13,13 @@ import (
 	"rpc_gen/kitex_gen/product"
 	"rpc_gen/kitex_gen/product/productcatalogservice"
 	"rpc_gen/kitex_gen/user/userservice"
+
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/circuitbreak"
 	"github.com/cloudwego/kitex/pkg/fallback"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/pkg/transmeta"
-	"github.com/clo
+	"github.com/cloudwego/kitex/transport"
 	consul "github.com/kitex-contrib/registry-consul"
 )
 

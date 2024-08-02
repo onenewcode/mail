@@ -6,6 +6,7 @@ import (
 	common "frontend/hertz_gen/frontend/common"
 	"frontend/infra/rpc"
 	frontendutils "frontend/utils"
+	rpccart "rpc_gen/kitex_gen/cart"
 
 	"github.com/cloudwego/hertz/pkg/app"
 )
