@@ -3,6 +3,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"frontend/biz/router"
 	"frontend/conf"
 	"frontend/infra/rpc"
@@ -27,7 +28,8 @@ import (
 func main() {
 	_ = godotenv.Load()
 	rpc.InitClient()
-
+	con := conf.GetConf()
+	fmt.Println(con.Hertz.Address)
 	address := conf.GetConf().Hertz.Address
 
 	p := hertzotelprovider.NewOpenTelemetryProvider(

@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"frontend/conf"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )

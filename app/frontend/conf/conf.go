@@ -1,6 +1,7 @@
 package conf
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"sync"
@@ -75,7 +76,8 @@ func initConf() {
 	}
 
 	conf.Env = GetEnv()
-
+	conf.Redis.Address = fmt.Sprintf(conf.Redis.Address, os.Getenv("REDIS_ADDR"))
+	conf.MySQL.DSN = fmt.Sprintf(conf.MySQL.DSN, os.Getenv("MYSQL_ADDR"))
 	pretty.Printf("%+v\n", conf)
 }
 
