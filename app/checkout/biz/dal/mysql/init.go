@@ -1,10 +1,10 @@
 package mysql
 
 import (
-	"checkout/conf"
-
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+
+	"checkout/conf"
 )
 
 var (

@@ -1,8 +1,13 @@
+
+
 package service
 
 import (
 	"context"
-	product "product/kitex_gen/product"
+
+	"product/biz/dal/mysql"
+	"product/biz/model"
+	product "rpc_gen/kitex_gen/product"
 )
 
 type SearchProductsService struct {
@@ -13,8 +18,18 @@ func NewSearchProductsService(ctx context.Context) *SearchProductsService {
 }
 
 // Run create note info
-func (s *SearchProductsService) Run(req *product.SearchProductsReq) (resp *product.SearchProductsResp, err error) {
+fuoduct.SearchProductsReq) (resp *product.SearchProductsResp, err error) {
 	// Finish your business logic.
-
-	return
+	p, err := model.SearchProduct(mysql.DB, s.ctx, req.Query)
+	var results []*product.Product
+	for _, v := range p {
+		results = append(results, &product.Product{
+			Id:          uint32(v.ID),
+			Name:        v.Name,
+			Description: v.Description,
+			Picture:     v.Picture,
+			Price:       v.Price,
+		})
+	}
+	return &product.SearchProductsResp{Results: results}, err
 }

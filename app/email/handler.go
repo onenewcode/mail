@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	email "email/kitex_gen/email"
+
 	"email/biz/service"
+	email "rpc_gen/kitex_gen/email"
 )
 
 // EmailServiceImpl implements the last service interface defined in the IDL.

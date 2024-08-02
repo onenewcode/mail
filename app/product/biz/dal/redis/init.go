@@ -3,13 +3,12 @@ package redis
 import (
 	"context"
 
+	"github.com/redis/go-redis/extra/redisotel/v9"
 	"github.com/redis/go-redis/v9"
 	"product/conf"
 )
 
-var (
-	RedisClient *redis.Client
-)
+var RedisClient *redis.Client
 
 func Init() {
 	RedisClient = redis.NewClient(&redis.Options{
@@ -21,4 +20,5 @@ func Init() {
 	if err := RedisClient.Ping(context.Background()).Err(); err != nil {
 		panic(err)
 	}
+	redisotel.InstrumentTracing(RedisClient) //nolint:errcheck
 }

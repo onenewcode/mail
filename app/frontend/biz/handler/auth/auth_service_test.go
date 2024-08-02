@@ -9,10 +9,10 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/ut"
 )
 
-func TestLogin(t *testing.T) {
+func TestRegister(t *testing.T) {
 	h := server.Default()
-	h.POST("/auth/login", Login)
-	path := "/auth/login"                                     // todo: you can customize query
+	h.POST("/auth/register", Register)
+	path := "/auth/register"                                  // todo: you can customize query
 	body := &ut.Body{Body: bytes.NewBufferString(""), Len: 1} // todo: you can customize body
 	header := ut.Header{}                                     // todo: you can customize header
 	w := ut.PerformRequest(h.Engine, "POST", path, body, header)
@@ -24,10 +24,10 @@ func TestLogin(t *testing.T) {
 	// assert.DeepEqual(t, "null", string(resp.Body()))
 }
 
-func TestRegister(t *testing.T) {
+func TestLogin(t *testing.T) {
 	h := server.Default()
-	h.POST("/auth/register", Register)
-	path := "/auth/register"                                  // todo: you can customize query
+	h.POST("/auth/login", Login)
+	path := "/auth/login"                                     // todo: you can customize query
 	body := &ut.Body{Body: bytes.NewBufferString(""), Len: 1} // todo: you can customize body
 	header := ut.Header{}                                     // todo: you can customize header
 	w := ut.PerformRequest(h.Engine, "POST", path, body, header)

@@ -7,9 +7,7 @@ import (
 	"payment/conf"
 )
 
-var (
-	RedisClient *redis.Client
-)
+var RedisClient *redis.Client
 
 func Init() {
 	RedisClient = redis.NewClient(&redis.Options{

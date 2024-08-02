@@ -3,10 +3,10 @@ package service
 import (
 	"context"
 
-	auth "frontend/hertz_gen/auth"
-	common "frontend/hertz_gen/common"
+	auth "frontend/hertz_gen/frontend/auth"
+	common "frontend/hertz_gen/frontend/common"
 	"frontend/infra/rpc"
-	"rpc_gen/kitex_gen/user"
+	rpcuser "rpc_gen/kitex_gen/user"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/hertz-contrib/sessions"
@@ -22,21 +22,19 @@ func NewRegisterService(Context context.Context, RequestContext *app.RequestCont
 }
 
 func (h *RegisterService) Run(req *auth.RegisterReq) (resp *common.Empty, err error) {
-	//defer func() {
-	// hlog.CtxInfof(h.Context, "req = %+v", req)
-	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
-	//}()
-	userResp, err := rpc.UserClient.Register(h.Context, &user.RegisterReq{
+	res, err := rpc.UserClient.Register(h.Context, &rpcuser.RegisterReq{
 		Email:           req.Email,
 		Password:        req.Password,
-		PasswordConfirm: req.PasswordConfirm,
+		ConfirmPassword: req.Password,
 	})
 	if err != nil {
 		return nil, err
 	}
+
 	session := sessions.Default(h.RequestContext)
-	session.Set("user_id", userResp.UserId)
+	session.Set("user_id", res.UserId)
 	err = session.Save()
+
 	if err != nil {
 		return nil, err
 	}

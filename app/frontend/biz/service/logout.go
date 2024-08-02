@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	common "frontend/hertz_gen/common"
+	common "frontend/hertz_gen/frontend/common"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/hertz-contrib/sessions"
 )
@@ -18,15 +18,8 @@ func NewLogoutService(Context context.Context, RequestContext *app.RequestContex
 }
 
 func (h *LogoutService) Run(req *common.Empty) (resp *common.Empty, err error) {
-	//defer func() {
-	// hlog.CtxInfof(h.Context, "req = %+v", req)
-	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
-	//}()
 	session := sessions.Default(h.RequestContext)
 	session.Clear()
-	err = session.Save()
-	if err != nil {
-		return nil, err
-	}
+	session.Save() //nolint:errcheck
 	return
 }

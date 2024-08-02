@@ -2,19 +2,21 @@ package main
 
 import (
 	"net"
-	"time"
+
+	"payment/conf"
+	"payment/middleware"
+	"rpc_gen/kitex_gen/payment/paymentservice"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
+	"github.com/cloudwego/kitex/pkg/transmeta"
 	"github.com/cloudwego/kitex/server"
-	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
-	"payment/conf"
-	"payment/kitex_gen/payment/paymentservice"
-	"go.uber.org/zap/zapcore"
-	"gopkg.in/natefinch/lumberjack.v2"
+	consul "github.com/kitex-contrib/registry-consul"
 )
 
 func main() {
+	_
+	d
 	opts := kitexInit()
 
 	svr := paymentservice.NewServer(new(PaymentServiceImpl), opts...)
@@ -33,27 +35,21 @@ func kitexInit() (opts []server.Option) {
 	}
 	opts = append(opts, server.WithServiceAddr(addr))
 
-	// service info
-	opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
-		ServiceName: conf.GetConf().Kitex.Service,
-	}))
+	opts = append(opts,
+		server.WithMiddleware(middleware.ServerMiddleware),
+	)
 
-	// klog
-	logger := kitexlogrus.NewLogger()
-	klog.SetLogger(logger)
-	klog.SetLevel(conf.LogLevel())
-	asyncWriter := &zapcore.BufferedWriteSyncer{
-		WS: zapcore.AddSync(&lumberjack.Logger{
-			Filename:   conf.GetConf().Kitex.LogFileName,
-			MaxSize:    conf.GetConf().Kitex.LogMaxSize,
-			MaxBackups: conf.GetConf().Kitex.LogMaxBackups,
-			MaxAge:     conf.GetConf().Kitex.LogMaxAge,
-		}),
-		FlushInterval: time.Minute,
+	serviceName := conf.GetConf().Kitex.Service
+
+	opts = append(opts,
+		server.WithMetaHandler(transmeta.ServerHTTP2Handler),
+		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: serviceName}),
+	)
+
+	r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
+	if err != nil {
+		klog.Fatal(err)
 	}
-	klog.SetOutput(asyncWriter)
-	server.RegisterShutdownHook(func() {
-		asyncWriter.Sync()
-	})
+	opts = append(opts, server.WithRegistry(r))
 	return
 }

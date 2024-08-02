@@ -2,7 +2,8 @@ package service
 
 import (
 	"context"
-	email "email/kitex_gen/email"
+
+	email "rpc_gen/kitex_gen/email"
 )
 
 type SendService struct {

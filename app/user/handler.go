@@ -2,7 +2,8 @@ package main
 
 import (
 	"context"
-	user "user/kitex_gen/user"
+
+	user "rpc_gen/kitex_gen/user"
 	"user/biz/service"
 )
 

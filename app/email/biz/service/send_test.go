@@ -3,7 +3,8 @@ package service
 import (
 	"context"
 	"testing"
-	email "email/kitex_gen/email"
+
+	email "rpc_gen/kitex_gen/email"
 )
 
 func TestSend_Run(t *testing.T) {
@@ -17,5 +18,4 @@ func TestSend_Run(t *testing.T) {
 	t.Logf("resp: %v", resp)
 
 	// todo: edit your unit test
-
 }

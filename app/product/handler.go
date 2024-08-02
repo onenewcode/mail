@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	product "product/kitex_gen/product"
+
 	"product/biz/service"
+	product "rpc_gen/kitex_gen/product"
 )
 
 // ProductCatalogServiceImpl implements the last service interface defined in the IDL.

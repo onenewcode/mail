@@ -5,8 +5,7 @@ import (
 
 	"frontend/biz/service"
 	"frontend/biz/utils"
-	"frontend/hertz_gen/common"
-
+	common "frontend/hertz_gen/frontend/common"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
@@ -22,10 +21,12 @@ func Home(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
+	// resp, err :=
 	resp, err := service.NewHomeService(ctx, c).Run(&req)
 	if err != nil {
 		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
 		return
 	}
+
 	c.HTML(consts.StatusOK, "home", utils.WarpResponse(ctx, c, resp))
 }

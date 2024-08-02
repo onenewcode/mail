@@ -7,21 +7,20 @@ import (
 )
 
 type User struct {
-	gorm.Model
-	Email          string `gorm:"uniqueIndex;type:varchar(255) not null"`
-	PasswordHashed string `gorm:"type:varchar(255) not null"`
+	Base
+	Email          string `gorm:"unique"`
+	PasswordHashed string
 }
 
-func (User) TableName() string {
+func (u User) TableName() string {
 	return "user"
 }
 
-func Create(ctx context.Context, db *gorm.DB, user *User) error {
-	return db.WithContext(ctx).Create(user).Error
+func GetByEmail(db *gorm.DB, ctx context.Context, email string) (user *User, err error) {
+	err = db.WithContext(ctx).Model(&User{}).Where(&User{Email: email}).First(&user).Error
+	return
 }
 
-func GetByEmail(ctx context.Context, db *gorm.DB, email string) (*User, error) {
-	var user User
-	err := db.WithContext(ctx).Where("email = ?", email).First(&user).Error
-	return &user, err
+func Create(db *gorm.DB, ctx context.Context, user *User) error {
+	return db.WithContext(ctx).Create(user).Error
 }

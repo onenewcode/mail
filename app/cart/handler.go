@@ -1,9 +1,10 @@
 package main
 
 import (
-	cart "cart/kitex_gen/cart"
 	"context"
+
 	"cart/biz/service"
+	cart "rpc_gen/kitex_gen/cart"
 )
 
 // CartServiceImpl implements the last service interface defined in the IDL.

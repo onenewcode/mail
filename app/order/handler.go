@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	order "order/kitex_gen/order"
+
 	"order/biz/service"
+	order "rpc_gen/kitex_gen/order"
 )
 
 // OrderServiceImpl implements the last service interface defined in the IDL.
