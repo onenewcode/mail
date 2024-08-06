@@ -20,7 +20,7 @@ func NewRegisterService(ctx context.Context) *RegisterService {
 
 func (s *RegisterService) Run(req *user.RegisterReq) (resp *user.RegisterResp, err error) {
 	// Finish your business logic.
-	if req.Password != req.ConfirmPassword {
+	if req.Password != req.PasswordConfirm {
 		err = errors.New("Password must be the same as ConfirmPassword")
 		return
 	}
