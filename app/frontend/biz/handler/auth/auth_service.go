@@ -26,6 +26,7 @@ func Register(ctx context.Context, c *app.RequestContext) {
 
 	_, err = service.NewRegisterService(ctx, c).Run(&req)
 	if err != nil {
+		// 返回一个新界面
 		c.HTML(consts.StatusOK, "sign-up", hertzUtils.H{"error": err})
 		return
 	}

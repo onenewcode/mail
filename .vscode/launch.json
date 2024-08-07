@@ -20,6 +20,14 @@
             "mode": "auto",
             "program": "${workspaceFolder}/app/user/."
             
+        },
+        {
+            "name": "app-product",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/app/product/."
+            
         }
     ]
 }

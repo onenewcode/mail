@@ -27,3 +27,7 @@
 sh build.sh
 sh output/bootstrap.sh
 ```
+
+# 依赖
+## redis
+存储session

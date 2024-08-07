@@ -1,5 +1,3 @@
-
-
 package service
 
 import (
@@ -18,7 +16,7 @@ func NewSearchProductsService(ctx context.Context) *SearchProductsService {
 }
 
 // Run create note info
-fuoduct.SearchProductsReq) (resp *product.SearchProductsResp, err error) {
+func (s *SearchProductsService) Run(req *product.SearchProductsReq) (resp *product.SearchProductsResp, err error) {
 	// Finish your business logic.
 	p, err := model.SearchProduct(mysql.DB, s.ctx, req.Query)
 	var results []*product.Product

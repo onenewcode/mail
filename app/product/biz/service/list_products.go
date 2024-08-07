@@ -1,5 +1,3 @@
-
-
 package service
 
 import (
@@ -18,7 +16,7 @@ func NewListProductsService(ctx context.Context) *ListProductsService {
 }
 
 // Run create note info
-fuuct.ListProductsReq) (resp *product.ListProductsResp, err error) {
+func (s *ListProductsService) Run(req *product.ListProductsReq) (resp *product.ListProductsResp, err error) {
 	// Finish your business logic.
 	c, err := model.GetProductsByCategoryName(mysql.DB, s.ctx, req.CategoryName)
 	if err != nil {

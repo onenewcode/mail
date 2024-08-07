@@ -41,3 +41,6 @@ app-frontend:
 .PHONY: app-user
 app-user: 
 	@cd app/user && go run .
+.PHONY: app-product
+app-product: 
+	@cd app/product && go run .

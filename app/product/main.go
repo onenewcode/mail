@@ -37,13 +37,12 @@ func kitexInit() (opts []server.Option) {
 		panic(err)
 	}
 	opts = append(opts, server.WithServiceAddr(addr))
-
+	// 可以提供第三方套件链接，todo
 	serviceName := conf.GetConf().Kitex.Service
 	etcdClient, err := etcd.NewClient(etcd.Options{})
 	if err != nil {
 		panic(err)
 	}
-
 	opts = append(opts,
 		server.WithSuite(tracing.NewServerSuite()),
 		server.WithSuite(etcdServer.NewSuite(serviceName, etcdClient)),

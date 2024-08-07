@@ -118,4 +118,3 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/apache/thrift => github.com/apache/thrift v0.13.0

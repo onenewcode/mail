@@ -76,8 +76,8 @@ func initConf() {
 	}
 
 	conf.Env = GetEnv()
+	conf.MySQL.DSN = fmt.Sprintf(conf.MySQL.DSN, os.Getenv("MYSQL_USER"), os.Getenv("MYSQL_PASSWORD"), os.Getenv("MYSQL_HOST"))
 	conf.Redis.Address = fmt.Sprintf(conf.Redis.Address, os.Getenv("REDIS_ADDR"))
-	conf.MySQL.DSN = fmt.Sprintf(conf.MySQL.DSN, os.Getenv("MYSQL_ADDR"))
 	pretty.Printf("%+v\n", conf)
 }
 

@@ -12,11 +12,12 @@ import (
 
 type Product struct {
 	Base
-	Name        string     `json:"name"`
-	Description string     `json:"description"`
-	Picture     string     `json:"picture"`
-	Price       float32    `json:"price"`
-	Categories  []Category `json:"categories" gorm:"many2many:product_category"`
+	Name        string  `json:"name"`
+	Description string  `json:"description"`
+	Picture     string  `json:"picture"`
+	Price       float32 `json:"price"`
+	// GORM 这是一个多对多的关系，需要通过名为 product_category 的关联表来进行关联。
+	Categories []Category `json:"categories" gorm:"many2many:product_category"`
 }
 
 func (p Product) TableName() string {

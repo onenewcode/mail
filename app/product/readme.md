@@ -24,3 +24,8 @@
 sh build.sh
 sh output/bootstrap.sh
 ```
+# 依赖
+## mysql
+存储数据
+## redis
+缓存

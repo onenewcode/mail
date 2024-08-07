@@ -19,9 +19,9 @@ func NewRegisterService(ctx context.Context) *RegisterService {
 }
 
 func (s *RegisterService) Run(req *user.RegisterReq) (resp *user.RegisterResp, err error) {
-	// Finish your business logic.
+	// Finish your business logic.p
 	if req.Password != req.ConfirmPassword {
-		err = errors.New("Password must be the same as ConfirmPassword")
+		err = errors.New("password must be the same as ConfirmPassword")
 		return
 	}
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
