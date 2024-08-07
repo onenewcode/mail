@@ -47,3 +47,6 @@ app-product:
 .PHONY: app-cart
 app-cart: 
 	@cd app/cart && go run .
+.PHONY: app-payment
+app-payment:
+	@cd app/payment && go run .

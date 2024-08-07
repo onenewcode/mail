@@ -3,6 +3,7 @@ package main
 import (
 	"net"
 
+	"payment/biz/dal"
 	"payment/conf"
 	"payment/middleware"
 	"rpc_gen/kitex_gen/payment/paymentservice"
@@ -11,12 +12,13 @@ import (
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/pkg/transmeta"
 	"github.com/cloudwego/kitex/server"
+	"github.com/joho/godotenv"
 	consul "github.com/kitex-contrib/registry-consul"
 )
 
 func main() {
-	_
-	d
+	_ = godotenv.Load()
+	dal.Init()
 	opts := kitexInit()
 
 	svr := paymentservice.NewServer(new(PaymentServiceImpl), opts...)
