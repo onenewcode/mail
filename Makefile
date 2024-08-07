@@ -44,3 +44,6 @@ app-user:
 .PHONY: app-product
 app-product: 
 	@cd app/product && go run .
+.PHONY: app-cart
+app-cart: 
+	@cd app/cart && go run .
