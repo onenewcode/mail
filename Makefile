@@ -53,3 +53,7 @@ app-payment:
 .PHONY: app-checkout
 app-checkout:
 	@cd app/checkout && go run .
+
+.PHONY: app-order
+app-order:
+	@cd app/order && go run .

@@ -3,6 +3,7 @@ package main
 import (
 	"net"
 
+	"order/biz/dal"
 	"order/conf"
 	"rpc_gen/kitex_gen/order/orderservice"
 
@@ -16,7 +17,7 @@ import (
 
 func main() {
 	_ = godotenv.Load()
-	d
+	dal.Init()
 	opts := kitexInit()
 
 	svr := orderservice.NewServer(new(OrderServiceImpl), opts...)
