@@ -35,6 +35,13 @@
             "mode": "auto",
             "program": "${workspaceFolder}/app/cart/."
             
+        },
+        {
+            "name": "app-email",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/app/email/."
         }
     ]
 }

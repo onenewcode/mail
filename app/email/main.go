@@ -6,15 +6,17 @@ import (
 	"email/biz/consumer"
 	"email/conf"
 	"email/infra/mq"
+	"rpc_gen/kitex_gen/email/emailservice"
+
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
-	"rpc_gen/kitex_gen/email/emailservice"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	_ = godotenv.Load()
 	opts := kitexInit()
-
 	mq.Init()
 	consumer.Init()
 	svr := emailservice.NewServer(new(EmailServiceImpl), opts...)

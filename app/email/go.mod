@@ -1,13 +1,13 @@
 module email
 
-go 1.22.4
+go 1.22.6
 
 replace rpc_gen => ../../rpc_gen
 
 require (
-	rpc_gen v0.0.0-20240701024504-2486f0201b8f
 	github.com/cloudwego/fastpb v0.0.4
 	github.com/cloudwego/kitex v0.10.3
+	github.com/golang/protobuf v1.5.4
 	github.com/kr/pretty v0.3.1
 	github.com/nats-io/nats.go v1.36.0
 	github.com/redis/go-redis/v9 v9.6.1
@@ -16,6 +16,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/gorm v1.25.11
+	rpc_gen v0.0.0-20240701024504-2486f0201b8f
 )
 
 require (
@@ -37,12 +38,12 @@ require (
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/fatih/structtag v1.2.0 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
-	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/pprof v0.0.0-20231212022811-ec68065c825e // indirect
 	github.com/iancoleman/strcase v0.3.0 // indirect
 	github.com/jhump/protoreflect v1.8.2 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/joho/godotenv v1.5.1
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.17.2 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.6 // indirect
@@ -70,3 +71,5 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240401170217-c3f982113cda // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/apache/thrift => github.com/apache/thrift v0.13.0
