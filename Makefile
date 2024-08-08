@@ -50,3 +50,6 @@ app-cart:
 .PHONY: app-payment
 app-payment:
 	@cd app/payment && go run .
+.PHONY: app-checkout
+app-checkout:
+	@cd app/checkout && go run .

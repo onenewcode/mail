@@ -5,7 +5,6 @@ go 1.22.4
 replace rpc_gen => ../../rpc_gen
 
 require (
-	rpc_gen v0.0.0-20240701024504-2486f0201b8f
 	github.com/cloudwego/fastpb v0.0.4
 	github.com/cloudwego/kitex v0.10.3
 	github.com/joho/godotenv v1.5.1
@@ -18,6 +17,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/gorm v1.25.11
+	rpc_gen v0.0.0-20240701024504-2486f0201b8f
 )
 
 require (
@@ -85,3 +85,5 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240401170217-c3f982113cda // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/apache/thrift => github.com/apache/thrift v0.13.0
