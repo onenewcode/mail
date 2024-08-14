@@ -1,18 +1,19 @@
 package rpc
 
 import (
+	"common/clientsuite"
 	"context"
-	"os"
-	"sync"
-
 	"frontend/conf"
+	"frontend/infra/mtl"
 	frontendutils "frontend/utils"
+	"os"
 	"rpc_gen/kitex_gen/cart/cartservice"
 	"rpc_gen/kitex_gen/checkout/checkoutservice"
 	"rpc_gen/kitex_gen/order/orderservice"
 	"rpc_gen/kitex_gen/product"
 	"rpc_gen/kitex_gen/product/productcatalogservice"
 	"rpc_gen/kitex_gen/user/userservice"
+	"sync"
 
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/circuitbreak"
@@ -47,7 +48,10 @@ func initUserClient() {
 	var opts []client.Option
 	r, err := consul.NewConsulResolver(conf.GetConf().Hertz.RegistryAddr)
 	frontendutils.MustHandleError(err)
-	opts = append(opts, client.WithResolver(r))
+	opts = append(opts, client.WithResolver(r), client.WithSuite(clientsuite.CommonGrpcClientSuite{
+		CurrentServiceName: frontendutils.ServiceName,
+		TracerProvider:     mtl.TracerProvider,
+	}))
 
 	UserClient, err = userservice.NewClient("user", opts...)
 	frontendutils.MustHandleError(err)
@@ -57,7 +61,10 @@ func initProductClient() {
 	var opts []client.Option
 	r, err := consul.NewConsulResolver(conf.GetConf().Hertz.RegistryAddr)
 	frontendutils.MustHandleError(err)
-	opts = append(opts, client.WithResolver(r))
+	opts = append(opts, client.WithResolver(r), client.WithSuite(clientsuite.CommonGrpcClientSuite{
+		CurrentServiceName: frontendutils.ServiceName,
+		TracerProvider:     mtl.TracerProvider,
+	}))
 
 	cbs := circuitbreak.NewCBSuite(func(ri rpcinfo.RPCInfo) string {
 		return circuitbreak.RPCInfo2Key(ri)
@@ -93,7 +100,10 @@ func initCartClient() {
 	var opts []client.Option
 	r, err := consul.NewConsulResolver(os.Getenv("REGISTRY_ADDR"))
 	frontendutils.MustHandleError(err)
-	opts = append(opts, client.WithResolver(r))
+	opts = append(opts, client.WithResolver(r), client.WithSuite(clientsuite.CommonGrpcClientSuite{
+		CurrentServiceName: frontendutils.ServiceName,
+		TracerProvider:     mtl.TracerProvider,
+	}))
 
 	opts = append(opts,
 		client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: frontendutils.ServiceName}),
@@ -109,7 +119,10 @@ func initCheckoutClient() {
 	var opts []client.Option
 	r, err := consul.NewConsulResolver(conf.GetConf().Hertz.RegistryAddr)
 	frontendutils.MustHandleError(err)
-	opts = append(opts, client.WithResolver(r))
+	opts = append(opts, client.WithResolver(r), client.WithSuite(clientsuite.CommonGrpcClientSuite{
+		CurrentServiceName: frontendutils.ServiceName,
+		TracerProvider:     mtl.TracerProvider,
+	}))
 
 	opts = append(opts,
 		client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: frontendutils.ServiceName}),
@@ -122,7 +135,10 @@ func initOrderClient() {
 	var opts []client.Option
 	r, err := consul.NewConsulResolver(conf.GetConf().Hertz.RegistryAddr)
 	frontendutils.MustHandleError(err)
-	opts = append(opts, client.WithResolver(r))
+	opts = append(opts, client.WithResolver(r), client.WithSuite(clientsuite.CommonGrpcClientSuite{
+		CurrentServiceName: frontendutils.ServiceName,
+		TracerProvider:     mtl.TracerProvider,
+	}))
 
 	opts = append(opts,
 		client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: frontendutils.ServiceName}),
