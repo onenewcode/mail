@@ -8,24 +8,29 @@ import (
 	"payment/conf"
 	"payment/middleware"
 	"rpc_gen/kitex_gen/payment/paymentservice"
+	"strings"
+
+	"common/utils"
 
 	"github.com/cloudwego/kitex/pkg/klog"
-	"github.com/cloudwego/kitex/pkg/rpcinfo"
-	"github.com/cloudwego/kitex/pkg/transmeta"
 	"github.com/cloudwego/kitex/server"
 	"github.com/joho/godotenv"
-	consul "github.com/kitex-contrib/registry-consul"
+	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 var serviceName string
 
 func main() {
-	godotenv.Load()
+	_ = godotenv.Load()
 	serviceName = conf.GetConf().Kitex.Service
-	mtl.InitMetric(serviceName, conf.GetConf().Kitex.MetricsPort, conf.GetConf().Registry.RegistryAddress[0])
+	mtl.InitLog(&lumberjack.Logger{
+		Filename:   conf.GetConf().Kitex.LogFileName,
+		MaxSize:    conf.GetConf().Kitex.LogMaxSize,
+		MaxBackups: conf.GetConf().Kitex.LogMaxBackups,
+		MaxAge:     conf.GetConf().Kitex.LogMaxAge,
+	})
 	mtl.InitTracing(serviceName)
-	mtl.InitLog(conf.GetConf().Kitex.LogFileName)
-
+	mtl.InitMetric(serviceName, conf.GetConf().Kitex.MetricsPort, conf.GetConf().Registry.RegistryAddress[0])
 	dal.Init()
 	opts := kitexInit()
 
@@ -39,7 +44,12 @@ func main() {
 
 func kitexInit() (opts []server.Option) {
 	// address
-	addr, err := net.ResolveTCPAddr("tcp", conf.GetConf().Kitex.Address)
+	address := conf.GetConf().Kitex.Address
+	if strings.HasPrefix(address, ":") {
+		localIp := utils.MustGetLocalIPv4()
+		address = localIp + address
+	}
+	addr, err := net.ResolveTCPAddr("tcp", address)
 	if err != nil {
 		panic(err)
 	}
@@ -48,19 +58,7 @@ func kitexInit() (opts []server.Option) {
 	opts = append(opts,
 		server.WithMiddleware(middleware.ServerMiddleware),
 	)
+	opts = append(opts, server.WithSuite(serversuite.CommonServerSuite{CurrentServiceName: serviceName, RegistryAddr: conf.GetConf().Registry.RegistryAddress[0]}))
 
-	serviceName := conf.GetConf().Kitex.Service
-
-	opts = append(opts,
-		server.WithMetaHandler(transmeta.ServerHTTP2Handler),
-		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: serviceName}),
-		server.WithSuite(serversuite.CommonServerSuite{CurrentServiceName: serviceName}),
-	)
-
-	r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
-	if err != nil {
-		klog.Fatal(err)
-	}
-	opts = append(opts, server.WithRegistry(r))
 	return
 }

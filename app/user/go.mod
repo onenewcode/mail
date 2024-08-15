@@ -12,11 +12,10 @@ require (
 	common v0.0.0-00010101000000-000000000000
 	github.com/cloudwego/kitex v0.10.3
 	github.com/joho/godotenv v1.5.1
-	github.com/kitex-contrib/obs-opentelemetry v0.2.7
-	github.com/kitex-contrib/registry-consul v0.0.0-20240508100819-2905e45155c1
 	github.com/kr/pretty v0.3.1
 	github.com/redis/go-redis/v9 v9.6.1
 	golang.org/x/crypto v0.26.0
+	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gopkg.in/validator.v2 v2.0.1
 	gopkg.in/yaml.v2 v2.4.0
 	gorm.io/driver/mysql v1.5.7
@@ -47,8 +46,6 @@ require (
 	github.com/cloudwego/netpoll v0.6.3 // indirect
 	github.com/cloudwego/runtimex v0.1.0 // indirect
 	github.com/cloudwego/thriftgo v0.3.15 // indirect
-	github.com/coreos/go-semver v0.3.1 // indirect
-	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/fatih/color v1.17.0 // indirect
@@ -56,7 +53,6 @@ require (
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-sql-driver/mysql v1.8.1 // indirect
-	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/pprof v0.0.0-20240727154555-813a5fbdbec8 // indirect
 	github.com/google/uuid v1.6.0 // indirect
@@ -76,9 +72,11 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/kitex-contrib/config-etcd v0.2.0 // indirect
+	github.com/kitex-contrib/config-consul v0.1.3 // indirect
 	github.com/kitex-contrib/monitor-prometheus v0.2.0 // indirect
+	github.com/kitex-contrib/obs-opentelemetry v0.2.7 // indirect
 	github.com/kitex-contrib/obs-opentelemetry/logging/zap v0.0.0-20240515092919-1f776656cb66 // indirect
+	github.com/kitex-contrib/registry-consul v0.0.0-20240508100819-2905e45155c1 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.8 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
@@ -100,9 +98,6 @@ require (
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
-	go.etcd.io/etcd/api/v3 v3.5.15 // indirect
-	go.etcd.io/etcd/client/pkg/v3 v3.5.15 // indirect
-	go.etcd.io/etcd/client/v3 v3.5.15 // indirect
 	go.opentelemetry.io/contrib/instrumentation/runtime v0.53.0 // indirect
 	go.opentelemetry.io/contrib/propagators/b3 v1.28.0 // indirect
 	go.opentelemetry.io/contrib/propagators/ot v1.28.0 // indirect
@@ -128,4 +123,5 @@ require (
 	google.golang.org/grpc v1.65.0 // indirect
 	google.golang.org/protobuf v1.34.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	sigs.k8s.io/yaml v1.4.0 // indirect
 )

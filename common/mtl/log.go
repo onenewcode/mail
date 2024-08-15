@@ -1,6 +1,7 @@
 package mtl
 
 import (
+	"io"
 	"os"
 	"time"
 
@@ -12,29 +13,23 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-func InitLog(logFileName string) {
+func InitLog(ioWriter io.Writer) {
 	var opts []kitexzap.Option
 	var output zapcore.WriteSyncer
 	if os.Getenv("GO_ENV") != "online" {
 		opts = append(opts, kitexzap.WithCoreEnc(zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig())))
-		output = os.Stdout
+		output = zapcore.AddSync(ioWriter)
 	} else {
 		opts = append(opts, kitexzap.WithCoreEnc(zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig())))
-		fileio, err := os.OpenFile(logFileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-		if err != nil {
-			panic("open log file failed")
-		}
-		// 使用 MultiWriteSyncer 将标准输出和文件写入器组合起来
-		writeSyncer := zapcore.NewMultiWriteSyncer(os.Stdout, fileio)
 		// async log
 		output = &zapcore.BufferedWriteSyncer{
-			WS:            writeSyncer,
+			WS:            zapcore.AddSync(ioWriter),
 			FlushInterval: time.Minute,
 		}
-		server.RegisterShutdownHook(func() {
-			output.Sync() //nolint:errcheck
-		})
 	}
+	server.RegisterShutdownHook(func() {
+		output.Sync() //nolint:errcheck
+	})
 	log := kitexzap.NewLogger(opts...)
 	klog.SetLogger(log)
 	klog.SetLevel(klog.LevelTrace)

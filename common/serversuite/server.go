@@ -2,7 +2,6 @@ package serversuite
 
 import (
 	"os"
-	"strings"
 
 	"common/mtl"
 
@@ -11,30 +10,38 @@ import (
 	"github.com/cloudwego/kitex/pkg/transmeta"
 	"github.com/cloudwego/kitex/server"
 	"github.com/hertz-contrib/obs-opentelemetry/provider"
-	"github.com/kitex-contrib/config-etcd/etcd"
-	etcdServer "github.com/kitex-contrib/config-etcd/server"
+	"github.com/kitex-contrib/config-consul/consul"
+	consulServer "github.com/kitex-contrib/config-consul/server"
 	prometheus "github.com/kitex-contrib/monitor-prometheus"
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
+	registryconsul "github.com/kitex-contrib/registry-consul"
 )
 
 type CommonServerSuite struct {
 	CurrentServiceName string
+	RegistryAddr       string
 }
 
 func (s CommonServerSuite) Options() []server.Option {
-
 	opts := []server.Option{
 		server.WithMetaHandler(transmeta.ServerHTTP2Handler),
 	}
 
+	r, err := registryconsul.NewConsulRegister(s.RegistryAddr)
+	if err != nil {
+		klog.Fatal(err)
+	}
+
+	opts = append(opts, server.WithRegistry(r))
+
 	if os.Getenv("CONFIG_CENTER_ENABLED") == "true" {
-		etcdNodes := os.Getenv("CONFIG_CENTER_NODES")
-		if etcdNodes != "" {
-			etcdClient, err := etcd.NewClient(etcd.Options{Node: strings.Split(etcdNodes, ",")})
+		consulNodes := os.Getenv("CONFIG_CENTER_NODES")
+		if consulNodes != "" {
+			consulClient, err := consul.NewClient(consul.Options{})
 			if err != nil {
 				klog.Error(err)
 			} else {
-				opts = append(opts, server.WithSuite(etcdServer.NewSuite(s.CurrentServiceName, etcdClient)))
+				opts = append(opts, server.WithSuite(consulServer.NewSuite(s.CurrentServiceName, consulClient)))
 			}
 		}
 	}
