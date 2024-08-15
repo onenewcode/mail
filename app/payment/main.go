@@ -3,19 +3,17 @@ package main
 import (
 	"common/mtl"
 	"common/serversuite"
+	"common/utils"
+	"github.com/cloudwego/kitex/pkg/klog"
+	"github.com/cloudwego/kitex/server"
+	"github.com/joho/godotenv"
+	"gopkg.in/natefinch/lumberjack.v2"
 	"net"
 	"payment/biz/dal"
 	"payment/conf"
 	"payment/middleware"
 	"rpc_gen/kitex_gen/payment/paymentservice"
 	"strings"
-
-	"common/utils"
-
-	"github.com/cloudwego/kitex/pkg/klog"
-	"github.com/cloudwego/kitex/server"
-	"github.com/joho/godotenv"
-	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 var serviceName string

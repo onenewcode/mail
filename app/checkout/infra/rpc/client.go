@@ -1,21 +1,17 @@
 package rpc
 
 import (
-	"os"
 	"sync"
 
 	"checkout/conf"
 	checkoututils "checkout/utils"
+	"common/clientsuite"
 	"rpc_gen/kitex_gen/cart/cartservice"
 	"rpc_gen/kitex_gen/order/orderservice"
 	"rpc_gen/kitex_gen/payment/paymentservice"
 	"rpc_gen/kitex_gen/product/productcatalogservice"
 
 	"github.com/cloudwego/kitex/client"
-	"github.com/cloudwego/kitex/pkg/rpcinfo"
-	"github.com/cloudwego/kitex/pkg/transmeta"
-	"github.com/cloudwego/kitex/transport"
-	consul "github.com/kitex-contrib/registry-consul"
 )
 
 var (
@@ -23,15 +19,21 @@ var (
 	ProductClient productcatalogservice.Client
 	PaymentClient paymentservice.Client
 	OrderClient   orderservice.Client
-
-	once sync.Once
-	err  error
+	once          sync.Once
+	err           error
+	registryAddr  string
+	serviceName   string
+	commonSuite   client.Option
 )
-
-var commonOpts []client.Option
 
 func InitClient() {
 	once.Do(func() {
+		registryAddr = conf.GetConf().Registry.RegistryAddress[0]
+		serviceName = conf.GetConf().Kitex.Service
+		commonSuite = client.WithSuite(clientsuite.CommonGrpcClientSuite{
+			CurrentServiceName: serviceName,
+			RegistryAddr:       registryAddr,
+		})
 		initCartClient()
 		initProductClient()
 		initPaymentClient()
@@ -40,61 +42,21 @@ func InitClient() {
 }
 
 func initProductClient() {
-	var opts []client.Option
-	r, err := consul.NewConsulResolver(conf.GetConf().Registry.RegistryAddress[0])
-	checkoututils.MustHandleError(err)
-	opts = append(opts, client.WithResolver(r))
-	opts = append(opts,
-		client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: conf.GetConf().Kitex.Service}),
-		client.WithTransportProtocol(transport.GRPC),
-		client.WithMetaHandler(transmeta.ClientHTTP2Handler),
-	)
-
-	ProductClient, err = productcatalogservice.NewClient("product", opts...)
+	ProductClient, err = productcatalogservice.NewClient("product", commonSuite)
 	checkoututils.MustHandleError(err)
 }
 
 func initCartClient() {
-	var opts []client.Option
-	if os.Getenv("REGISTRY_ENABLE") == "true" {
-		r, err := consul.NewConsulResolver(os.Getenv("REGISTRY_ADDR"))
-		checkoututils.MustHandleError(err)
-		opts = append(opts, client.WithResolver(r))
-	} else {
-		opts = append(opts, client.WithHostPorts("localhost:8883"))
-	}
-	opts = append(opts,
-		client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: conf.GetConf().Kitex.Service}),
-		client.WithTransportProtocol(transport.GRPC),
-		client.WithMetaHandler(transmeta.ServerHTTP2Handler),
-	)
-	opts = append(opts, commonOpts...)
-	CartClient, err = cartservice.NewClient("cart", opts...)
+	CartClient, err = cartservice.NewClient("cart", commonSuite)
 	checkoututils.MustHandleError(err)
 }
 
 func initPaymentClient() {
-	var opts []client.Option
-	if os.Getenv("REGISTRY_ENABLE") == "true" {
-		r, err := consul.NewConsulResolver(os.Getenv("REGISTRY_ADDR"))
-		checkoututils.MustHandleError(err)
-		opts = append(opts, client.WithResolver(r))
-	} else {
-		opts = append(opts, client.WithHostPorts("localhost:8886"))
-	}
-	opts = append(opts, client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: conf.GetConf().Kitex.Service}), client.WithTransportProtocol(transport.GRPC), client.WithMetaHandler(transmeta.ClientHTTP2Handler))
-	opts = append(opts, commonOpts...)
-	PaymentClient, err = paymentservice.NewClient("payment", opts...)
+	PaymentClient, err = paymentservice.NewClient("payment", commonSuite)
 	checkoututils.MustHandleError(err)
 }
 
 func initOrderClient() {
-	var opts []client.Option
-	r, err := consul.NewConsulResolver(conf.GetConf().Registry.RegistryAddress[0])
-	checkoututils.MustHandleError(err)
-	opts = append(opts, client.WithResolver(r))
-	opts = append(opts, client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: conf.GetConf().Kitex.Service}), client.WithTransportProtocol(transport.GRPC), client.WithMetaHandler(transmeta.ClientHTTP2Handler))
-	opts = append(opts, commonOpts...)
-	OrderClient, err = orderservice.NewClient("order", opts...)
+	OrderClient, err = orderservice.NewClient("order", commonSuite)
 	checkoututils.MustHandleError(err)
 }
