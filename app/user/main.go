@@ -3,6 +3,8 @@ package main
 import (
 	"net"
 
+	"common/mtl"
+	"common/serversuite"
 	"rpc_gen/kitex_gen/user/userservice"
 	"user/biz/dal"
 	"user/conf"
@@ -16,8 +18,15 @@ import (
 	consul "github.com/kitex-contrib/registry-consul"
 )
 
+var serviceName string
+
 func main() {
-	_ = godotenv.Load()
+	godotenv.Load()
+
+	serviceName = conf.GetConf().Kitex.Service
+	mtl.InitMetric(serviceName, conf.GetConf().Kitex.MetricsPort, conf.GetConf().Registry.RegistryAddress[0])
+	mtl.InitTracing(serviceName)
+	mtl.InitLog()
 	dal.Init()
 	opts := kitexInit()
 
@@ -37,11 +46,10 @@ func kitexInit() (opts []server.Option) {
 	}
 	opts = append(opts, server.WithServiceAddr(addr))
 
-	serviceName := conf.GetConf().Kitex.Service
-
 	opts = append(opts,
 		server.WithMetaHandler(transmeta.ServerHTTP2Handler),
 		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: serviceName}),
+		server.WithSuite(serversuite.CommonServerSuite{CurrentServiceName: serviceName}),
 	)
 	r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
 	if err != nil {
