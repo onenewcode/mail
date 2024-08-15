@@ -1,8 +1,9 @@
 package main
 
 import (
+	"common/mtl"
+	"common/serversuite"
 	"net"
-
 	"product/biz/dal"
 	"product/conf"
 	"rpc_gen/kitex_gen/product/productcatalogservice"
@@ -12,14 +13,19 @@ import (
 	"github.com/cloudwego/kitex/pkg/transmeta"
 	"github.com/cloudwego/kitex/server"
 	"github.com/joho/godotenv"
-	"github.com/kitex-contrib/config-etcd/etcd"
-	etcdServer "github.com/kitex-contrib/config-etcd/server"
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 	consul "github.com/kitex-contrib/registry-consul"
 )
 
+var serviceName string
+
 func main() {
-	_ = godotenv.Load()
+	godotenv.Load()
+	serviceName = conf.GetConf().Kitex.Service
+	mtl.InitMetric(serviceName, conf.GetConf().Kitex.MetricsPort, conf.GetConf().Registry.RegistryAddress[0])
+	mtl.InitTracing(serviceName)
+	mtl.InitLog(conf.GetConf().Kitex.LogFileName)
+
 	dal.Init()
 	opts := kitexInit()
 
@@ -37,17 +43,14 @@ func kitexInit() (opts []server.Option) {
 		panic(err)
 	}
 	opts = append(opts, server.WithServiceAddr(addr))
-	// 可以提供第三方套件链接，todo
+
 	serviceName := conf.GetConf().Kitex.Service
-	etcdClient, err := etcd.NewClient(etcd.Options{})
-	if err != nil {
-		panic(err)
-	}
+
 	opts = append(opts,
 		server.WithSuite(tracing.NewServerSuite()),
-		server.WithSuite(etcdServer.NewSuite(serviceName, etcdClient)),
-		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: conf.GetConf().Kitex.Service}),
+		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: serviceName}),
 		server.WithMetaHandler(transmeta.ServerHTTP2Handler),
+		server.WithSuite(serversuite.CommonServerSuite{CurrentServiceName: serviceName}),
 	)
 
 	r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
