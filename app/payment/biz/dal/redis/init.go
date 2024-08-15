@@ -2,9 +2,9 @@ package redis
 
 import (
 	"context"
+	"payment/conf"
 
 	"github.com/redis/go-redis/v9"
-	"payment/conf"
 )
 
 var RedisClient *redis.Client
