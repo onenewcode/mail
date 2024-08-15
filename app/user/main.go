@@ -26,7 +26,7 @@ func main() {
 	serviceName = conf.GetConf().Kitex.Service
 	mtl.InitMetric(serviceName, conf.GetConf().Kitex.MetricsPort, conf.GetConf().Registry.RegistryAddress[0])
 	mtl.InitTracing(serviceName)
-	mtl.InitLog()
+	mtl.InitLog(conf.GetConf().Kitex.LogFileName)
 	dal.Init()
 	opts := kitexInit()
 

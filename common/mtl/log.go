@@ -12,7 +12,7 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-func InitLog() {
+func InitLog(logFileName string) {
 	var opts []kitexzap.Option
 	var output zapcore.WriteSyncer
 	if os.Getenv("GO_ENV") != "online" {
@@ -20,9 +20,15 @@ func InitLog() {
 		output = os.Stdout
 	} else {
 		opts = append(opts, kitexzap.WithCoreEnc(zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig())))
+		fileio, err := os.OpenFile(logFileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+		if err != nil {
+			panic("open log file failed")
+		}
+		// 使用 MultiWriteSyncer 将标准输出和文件写入器组合起来
+		writeSyncer := zapcore.NewMultiWriteSyncer(os.Stdout, fileio)
 		// async log
 		output = &zapcore.BufferedWriteSyncer{
-			WS:            zapcore.AddSync(os.Stdout),
+			WS:            writeSyncer,
 			FlushInterval: time.Minute,
 		}
 		server.RegisterShutdownHook(func() {
