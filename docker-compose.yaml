@@ -10,7 +10,8 @@ services:
       - 3306:3306
     environment:
       - MYSQL_ROOT_PASSWORD=root
-    volumes:
+    volumes:  
+    # 容器会自动查找这个目录下的 SQL 脚本文件并在启动时执行它们
       - ./db/sql/ini:/docker-entrypoint-initdb.d
   redis:
     image: "redis:latest"
@@ -19,14 +20,19 @@ services:
   nats:
     image: nats:latest
     ports:
+      # 连接和消息交换
       - "4222:4222"
+      # 监控界面
       - "8222:8222"
   # Jaeger
   jaeger-all-in-one:
     image: jaegertracing/all-in-one:latest
     ports:
+      # UI 界面
       - "16686:16686"
+      # gRPC
       - "4317:4317"
+      # OpenTelemetry 
       - "4318:4318"
   prometheus:
     image: prom/prometheus:latest

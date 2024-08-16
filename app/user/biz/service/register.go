@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 	"errors"
-
 	"rpc_gen/kitex_gen/user"
+
 	"user/biz/dal/mysql"
 	"user/biz/model"
 

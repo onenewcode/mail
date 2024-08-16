@@ -2,13 +2,14 @@ package main
 
 import (
 	"context"
+	"io"
+	"os"
+
 	"frontend/biz/router"
 	"frontend/conf"
 	"frontend/infra/mtl"
 	"frontend/infra/rpc"
 	"frontend/middleware"
-	"io"
-	"os"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/middlewares/server/recovery"
@@ -36,7 +37,7 @@ func main() {
 	rpc.InitClient()
 	address := conf.GetConf().Hertz.Address
 	// 存储日志
-	f, err := os.OpenFile(conf.GetConf().Hertz.LogFileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	f, err := os.OpenFile(conf.GetConf().Hertz.LogFileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644)
 	if err != nil {
 		panic(err)
 	}

@@ -57,3 +57,8 @@ app-checkout:
 .PHONY: app-order
 app-order:
 	@cd app/order && go run .
+
+.PHONY: lint
+lint: ## run `gofmt` for all go module
+	@gofmt -l -w app
+	@gofumpt -l -w  app

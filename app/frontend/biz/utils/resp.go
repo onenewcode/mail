@@ -2,10 +2,10 @@ package utils
 
 import (
 	"context"
+	"rpc_gen/kitex_gen/cart"
 
 	"frontend/infra/rpc"
 	frontendutils "frontend/utils"
-	"rpc_gen/kitex_gen/cart"
 
 	"github.com/cloudwego/hertz/pkg/app"
 )

@@ -2,10 +2,10 @@ package email
 
 import (
 	"context"
+	"rpc_gen/kitex_gen/email"
+
 	"email/infra/mq"
 	"email/infra/notify"
-
-	"rpc_gen/kitex_gen/email"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/server"

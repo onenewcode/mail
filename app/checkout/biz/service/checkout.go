@@ -4,6 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"rpc_gen/kitex_gen/cart"
+	"rpc_gen/kitex_gen/email"
+	"rpc_gen/kitex_gen/order"
+	"rpc_gen/kitex_gen/payment"
+	"rpc_gen/kitex_gen/product"
 	"strconv"
 
 	"checkout/infra/mq"
@@ -11,12 +16,8 @@ import (
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/nats-io/nats.go"
 	"google.golang.org/protobuf/proto"
-	"rpc_gen/kitex_gen/cart"
+
 	checkout "rpc_gen/kitex_gen/checkout"
-	"rpc_gen/kitex_gen/email"
-	"rpc_gen/kitex_gen/order"
-	"rpc_gen/kitex_gen/payment"
-	"rpc_gen/kitex_gen/product"
 )
 
 type CheckoutService struct {

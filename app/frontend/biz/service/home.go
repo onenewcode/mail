@@ -2,13 +2,13 @@ package service
 
 import (
 	"context"
+	"rpc_gen/kitex_gen/product"
 
 	common "frontend/hertz_gen/frontend/common"
 	"frontend/infra/rpc"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/utils"
 	"github.com/cloudwego/kitex/pkg/klog"
-	"rpc_gen/kitex_gen/product"
 )
 
 type HomeService struct {

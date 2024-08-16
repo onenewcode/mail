@@ -45,7 +45,6 @@ func initMetric() route.CtxCallback {
 	}}
 	// 注册我们的监控服务
 	err = r.Register(registryInfo)
-
 	if err != nil {
 		hlog.Error(err)
 	}

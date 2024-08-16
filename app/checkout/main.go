@@ -1,15 +1,16 @@
 package main
 
 import (
-	"checkout/conf"
-	"checkout/infra/mq"
-	"checkout/infra/rpc"
 	"common/mtl"
 	"common/serversuite"
 	"common/utils"
 	"net"
 	"rpc_gen/kitex_gen/checkout/checkoutservice"
 	"strings"
+
+	"checkout/conf"
+	"checkout/infra/mq"
+	"checkout/infra/rpc"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/server"

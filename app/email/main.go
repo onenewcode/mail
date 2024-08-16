@@ -3,12 +3,13 @@ package main
 import (
 	"common/mtl"
 	"common/utils"
-	"email/biz/consumer"
-	"email/conf"
-	"email/infra/mq"
 	"net"
 	"rpc_gen/kitex_gen/email/emailservice"
 	"strings"
+
+	"email/biz/consumer"
+	"email/conf"
+	"email/infra/mq"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"

@@ -3,10 +3,6 @@ package rpc
 import (
 	"common/clientsuite"
 	"context"
-	"frontend/conf"
-	"frontend/infra/mtl"
-	frontendutils "frontend/utils"
-	"os"
 	"rpc_gen/kitex_gen/cart/cartservice"
 	"rpc_gen/kitex_gen/checkout/checkoutservice"
 	"rpc_gen/kitex_gen/order/orderservice"
@@ -15,64 +11,53 @@ import (
 	"rpc_gen/kitex_gen/user/userservice"
 	"sync"
 
+	"frontend/conf"
+	"frontend/infra/mtl"
+	frontendutils "frontend/utils"
+
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/circuitbreak"
 	"github.com/cloudwego/kitex/pkg/fallback"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
-	"github.com/cloudwego/kitex/pkg/transmeta"
-	"github.com/cloudwego/kitex/transport"
-	consul "github.com/kitex-contrib/registry-consul"
+	prometheus "github.com/kitex-contrib/monitor-prometheus"
 )
 
 var (
-	UserClient     userservice.Client
 	ProductClient  productcatalogservice.Client
+	UserClient     userservice.Client
 	CartClient     cartservice.Client
 	CheckoutClient checkoutservice.Client
 	OrderClient    orderservice.Client
-
-	once sync.Once
+	once           sync.Once
+	err            error
+	registryAddr   string
+	commonSuite    client.Option
 )
 
 func InitClient() {
 	once.Do(func() {
-		initUserClient()
+		registryAddr = conf.GetConf().Hertz.RegistryAddr
+		commonSuite = client.WithSuite(clientsuite.CommonGrpcClientSuite{
+			RegistryAddr:       registryAddr,
+			CurrentServiceName: frontendutils.ServiceName,
+		})
 		initProductClient()
+		initUserClient()
 		initCartClient()
 		initCheckoutClient()
 		initOrderClient()
 	})
 }
 
-func initUserClient() {
-	var opts []client.Option
-	r, err := consul.NewConsulResolver(conf.GetConf().Hertz.RegistryAddr)
-	frontendutils.MustHandleError(err)
-	opts = append(opts, client.WithResolver(r), client.WithSuite(clientsuite.CommonGrpcClientSuite{
-		CurrentServiceName: frontendutils.ServiceName,
-		TracerProvider:     mtl.TracerProvider,
-	}))
-
-	UserClient, err = userservice.NewClient("user", opts...)
-	frontendutils.MustHandleError(err)
-}
-
 func initProductClient() {
 	var opts []client.Option
-	r, err := consul.NewConsulResolver(conf.GetConf().Hertz.RegistryAddr)
-	frontendutils.MustHandleError(err)
-	opts = append(opts, client.WithResolver(r), client.WithSuite(clientsuite.CommonGrpcClientSuite{
-		CurrentServiceName: frontendutils.ServiceName,
-		TracerProvider:     mtl.TracerProvider,
-	}))
 
 	cbs := circuitbreak.NewCBSuite(func(ri rpcinfo.RPCInfo) string {
 		return circuitbreak.RPCInfo2Key(ri)
 	})
-
 	cbs.UpdateServiceCBConfig("shop-frontend/product/GetProduct", circuitbreak.CBConfig{Enable: true, ErrRate: 0.5, MinSample: 2})
 
-	opts = append(opts, client.WithCircuitBreaker(cbs), client.WithFallback(fallback.NewFallbackPolicy(fallback.UnwrapHelper(func(ctx context.Context, req, resp interface{}, err error) (fbResp interface{}, fbErr error) {
+	opts = append(opts, commonSuite, client.WithCircuitBreaker(cbs), client.WithFallback(fallback.NewFallbackPolicy(fallback.UnwrapHelper(func(ctx context.Context, req, resp interface{}, err error) (fbResp interface{}, fbErr error) {
 		methodName := rpcinfo.GetRPCInfo(ctx).To().Method()
 		if err == nil {
 			return resp, err
@@ -92,57 +77,28 @@ func initProductClient() {
 			},
 		}, nil
 	}))))
+	opts = append(opts, client.WithTracer(prometheus.NewClientTracer("", "", prometheus.WithDisableServer(true), prometheus.WithRegistry(mtl.Registry))))
+
 	ProductClient, err = productcatalogservice.NewClient("product", opts...)
 	frontendutils.MustHandleError(err)
 }
 
-func initCartClient() {
-	var opts []client.Option
-	r, err := consul.NewConsulResolver(os.Getenv("REGISTRY_ADDR"))
+func initUserClient() {
+	UserClient, err = userservice.NewClient("user", commonSuite)
 	frontendutils.MustHandleError(err)
-	opts = append(opts, client.WithResolver(r), client.WithSuite(clientsuite.CommonGrpcClientSuite{
-		CurrentServiceName: frontendutils.ServiceName,
-		TracerProvider:     mtl.TracerProvider,
-	}))
+}
 
-	opts = append(opts,
-		client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: frontendutils.ServiceName}),
-		client.WithMetaHandler(transmeta.ClientHTTP2Handler),
-		client.WithTransportProtocol(transport.GRPC),
-	)
-
-	CartClient, err = cartservice.NewClient("cart", opts...)
+func initCartClient() {
+	CartClient, err = cartservice.NewClient("cart", commonSuite)
 	frontendutils.MustHandleError(err)
 }
 
 func initCheckoutClient() {
-	var opts []client.Option
-	r, err := consul.NewConsulResolver(conf.GetConf().Hertz.RegistryAddr)
-	frontendutils.MustHandleError(err)
-	opts = append(opts, client.WithResolver(r), client.WithSuite(clientsuite.CommonGrpcClientSuite{
-		CurrentServiceName: frontendutils.ServiceName,
-		TracerProvider:     mtl.TracerProvider,
-	}))
-
-	opts = append(opts,
-		client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: frontendutils.ServiceName}),
-	)
-	CheckoutClient, err = checkoutservice.NewClient("checkout", opts...)
+	CheckoutClient, err = checkoutservice.NewClient("checkout", commonSuite)
 	frontendutils.MustHandleError(err)
 }
 
 func initOrderClient() {
-	var opts []client.Option
-	r, err := consul.NewConsulResolver(conf.GetConf().Hertz.RegistryAddr)
-	frontendutils.MustHandleError(err)
-	opts = append(opts, client.WithResolver(r), client.WithSuite(clientsuite.CommonGrpcClientSuite{
-		CurrentServiceName: frontendutils.ServiceName,
-		TracerProvider:     mtl.TracerProvider,
-	}))
-
-	opts = append(opts,
-		client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: frontendutils.ServiceName}),
-	)
-	OrderClient, err = orderservice.NewClient("order", opts...)
+	OrderClient, err = orderservice.NewClient("order", commonSuite)
 	frontendutils.MustHandleError(err)
 }

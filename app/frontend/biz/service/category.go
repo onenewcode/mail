@@ -2,10 +2,10 @@ package service
 
 import (
 	"context"
+	"rpc_gen/kitex_gen/product"
 
 	category "frontend/hertz_gen/frontend/category"
 	"frontend/infra/rpc"
-	"rpc_gen/kitex_gen/product"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/utils"

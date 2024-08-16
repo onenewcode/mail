@@ -2,13 +2,13 @@ package service
 
 import (
 	"context"
+	"rpc_gen/kitex_gen/product"
 
 	"cart/biz/dal/mysql"
 	"cart/biz/model"
 	"cart/infra/rpc"
 
 	cart "rpc_gen/kitex_gen/cart"
-	"rpc_gen/kitex_gen/product"
 
 	"github.com/cloudwego/kitex/pkg/kerrors"
 )
@@ -37,7 +37,6 @@ func (s *AddItemService) Run(req *cart.AddItemReq) (resp *cart.AddItemResp, err 
 		ProductId: req.Item.ProductId,
 		Qty:       uint32(req.Item.Quantity),
 	})
-
 	if err != nil {
 		return nil, kerrors.NewBizStatusError(50000, err.Error())
 	}

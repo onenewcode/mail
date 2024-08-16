@@ -2,10 +2,11 @@ package service
 
 import (
 	"context"
+	"rpc_gen/kitex_gen/cart"
 
 	"order/biz/dal/mysql"
 	"order/biz/model"
-	"rpc_gen/kitex_gen/cart"
+
 	order "rpc_gen/kitex_gen/order"
 
 	"github.com/cloudwego/kitex/pkg/klog"

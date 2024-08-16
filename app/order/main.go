@@ -5,10 +5,11 @@ import (
 	"common/serversuite"
 	"common/utils"
 	"net"
-	"order/biz/dal"
-	"order/conf"
 	"rpc_gen/kitex_gen/order/orderservice"
 	"strings"
+
+	"order/biz/dal"
+	"order/conf"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/server"

@@ -1,11 +1,12 @@
 package rpc
 
 import (
-	"cart/conf"
-	cartutils "cart/utils"
 	"common/clientsuite"
 	"rpc_gen/kitex_gen/product/productcatalogservice"
 	"sync"
+
+	"cart/conf"
+	cartutils "cart/utils"
 
 	"github.com/cloudwego/kitex/client"
 )

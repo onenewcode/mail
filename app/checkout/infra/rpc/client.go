@@ -1,15 +1,15 @@
 package rpc
 
 import (
-	"sync"
-
-	"checkout/conf"
-	checkoututils "checkout/utils"
 	"common/clientsuite"
 	"rpc_gen/kitex_gen/cart/cartservice"
 	"rpc_gen/kitex_gen/order/orderservice"
 	"rpc_gen/kitex_gen/payment/paymentservice"
 	"rpc_gen/kitex_gen/product/productcatalogservice"
+	"sync"
+
+	"checkout/conf"
+	checkoututils "checkout/utils"
 
 	"github.com/cloudwego/kitex/client"
 )

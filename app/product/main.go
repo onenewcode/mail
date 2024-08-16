@@ -4,9 +4,10 @@ import (
 	"common/mtl"
 	"common/serversuite"
 	"net"
+	"rpc_gen/kitex_gen/product/productcatalogservice"
+
 	"product/biz/dal"
 	"product/conf"
-	"rpc_gen/kitex_gen/product/productcatalogservice"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"

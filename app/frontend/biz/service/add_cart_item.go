@@ -2,11 +2,12 @@ package service
 
 import (
 	"context"
+	rpccart "rpc_gen/kitex_gen/cart"
+
 	"frontend/hertz_gen/frontend/cart"
 	common "frontend/hertz_gen/frontend/common"
 	"frontend/infra/rpc"
 	frontendutils "frontend/utils"
-	rpccart "rpc_gen/kitex_gen/cart"
 
 	"github.com/cloudwego/hertz/pkg/app"
 )
